@@ -1,13 +1,40 @@
-function seed() {}
+function seed() {
+  return [...arguments];
+}
 
-function same([x, y], [j, k]) {}
+function same([x, y], [j, k]) {
+  if(x=== j && y===k){
+    return true;
+  }
+  return false;
+}
 
 // The game state to search for `cell` is passed as the `this` value of the function.
-function contains(cell) {}
+function contains(cell) {
+  return this.some(item =>same(item,cell));
+}
 
-const printCell = (cell, state) => {};
+const printCell = (cell, state) => {
+  return this.contains.call(state, cell)? "\u25A3":"\u25A2";
+};
 
-const corners = (state = []) => {};
+const corners = (state = []) => {
+  let topRight=[0,0];
+  let bottomLeft=[0,0];
+  if(state.length !=0){
+    const axis=state.reduce((prev, [x,y])=>
+                            ({x:[...prev.x, x],
+                            y:[...prev.y,y],}),
+                              {x:[],y:[]});
+
+    const { [0]: minX, [state.length-1]: maxX}=axis.x.sort();
+    const { [0]: minY, [state.length-1]: maxY}=axis.y.sort();
+    topRight=[maxX, maxY];
+    bottomLeft=[minX, minY];
+
+  }
+  return{topRight, bottomLeft};
+};
 
 const printCells = (state) => {};
 
@@ -50,8 +77,8 @@ const startPatterns = {
     ]
   };
   
-  const [pattern, iterations] = process.argv.slice(2);
-  const runAsScript = require.main === module;
+const [pattern, iterations] = process.argv.slice(2);
+const runAsScript = require.main === module;
   
   if (runAsScript) {
     if (startPatterns[pattern] && !isNaN(parseInt(iterations))) {
